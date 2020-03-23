@@ -1,5 +1,8 @@
 <template>
-  <div id="app">根组件</div>
+  <div id="app">
+    <!-- 一级路由组件显示位置 -->
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
