@@ -7,6 +7,7 @@ import Vue from 'vue'
 // 导入组件
 import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
+import Welcome from '../views/Welcome.vue'
 // 注册路由
 Vue.use(VueRouter)
 // 声明路由规则
@@ -16,7 +17,11 @@ const routes = [{
   },
   {
     path: '/',
-    component: Home
+    component: Home,
+    children: [{
+      path: "/",
+      component: Welcome
+    }]
   },
 ]
 // 初始化路由实例
