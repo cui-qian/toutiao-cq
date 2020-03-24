@@ -70,7 +70,16 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           // 校验成功,进行登录
-          console.log("进行登录");
+          this.$http
+            .post("authorizations", this.loginForm)
+            .then(res => {
+              //   登录成功,跳转到首页
+              this.$router.push("/");
+            })
+            .catch(() => {
+              //   错误提示
+              this.$message.error("手机号或验证码错误");
+            });
         }
       });
     }

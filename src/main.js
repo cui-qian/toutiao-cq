@@ -7,6 +7,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router/index'
 import App from './App.vue';
 
+// 导入配置好的axios
+// @代表src的绝对路径,vue-cli下才可使用
+import axios from '@/api'
+
+// 挂载axios
+Vue.prototype.$http = axios
+
 Vue.use(ElementUI);
 
 new Vue({
@@ -15,3 +22,8 @@ new Vue({
   //挂载路由实例
   router
 });
+
+
+// main.js的职责
+// 1.负责导入项目中需要依赖的资源
+// 2.初始化根实例
