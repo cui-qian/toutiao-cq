@@ -3,11 +3,11 @@
     <el-card class="my-card">
       <img src="../assets/logo_index.png" alt />
       <!-- 表单项:文字说明 -->
-      <el-form>
-        <el-form-item>
+      <el-form :model="loginForm" :rules="loginRules">
+        <el-form-item prop="mobile">
           <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="code">
           <el-input
             v-model="loginForm.code"
             placeholder="请输入验证码"
@@ -30,11 +30,36 @@
 export default {
   name: "my-login",
   data() {
+    // 自定义校验函数
+    const checkMobile = (rule, value, callback) => {
+      // 校验value的值
+      // 格式: 1开头 ; 第二个数字是3-9之间 ; 9个数字结尾
+      if (/^1[3-9]\d{9}$/.test(value)) {
+        callback();
+      } else {
+        callback(new Error("手机号格式不正确!"));
+      }
+    };
     return {
       // 登录表单数据
       loginForm: {
         mobile: "",
         code: ""
+      },
+      //   校验规则对象
+      loginRules: {
+        mobile: [
+          { required: true, message: "请输入手机号", trigger: "blur" },
+          // 指定一个自定义校验函数,失去焦点后触发
+          {
+            validator: checkMobile,
+            trigger: "blur"
+          }
+        ],
+        code: [
+          { required: true, message: "请输入验证码", trigger: "blur" },
+          { len: 6, message: "请输入6位验证码", trigger: "blur" }
+        ]
       }
     };
   }
