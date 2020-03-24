@@ -43,8 +43,8 @@ export default {
     return {
       // 登录表单数据
       loginForm: {
-        mobile: "",
-        code: ""
+        mobile: "13911111111",
+        code: "264810"
       },
       //   校验规则对象
       loginRules: {
