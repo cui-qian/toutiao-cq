@@ -3,7 +3,7 @@
     <el-card class="my-card">
       <img src="../assets/logo_index.png" alt />
       <!-- 表单项:文字说明 -->
-      <el-form :model="loginForm" :rules="loginRules">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
         <el-form-item prop="mobile">
           <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
@@ -19,7 +19,7 @@
           <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" style="width:100%">登 录</el-button>
+          <el-button @click="login()" type="primary" style="width:100%">登 录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -62,6 +62,18 @@ export default {
         ]
       }
     };
+  },
+  methods: {
+    // 登录函数,对整体表单进行验证
+    login() {
+      //   this.$refs.loginForm 就是组件实例   valid 代表整体表单是否校验成功
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          // 校验成功,进行登录
+          console.log("进行登录");
+        }
+      });
+    }
   }
 };
 </script>
