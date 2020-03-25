@@ -54,15 +54,17 @@
         <!-- 文字 -->
         <span class="text">崔总的公司</span>
         <!-- 下拉组件 -->
-        <el-dropdown class="my-dropdown">
+        <el-dropdown class="my-dropdown" @command="handelClick">
           <span class="el-dropdown-link">
             <img class="user-avatar" :src="userPhoto" alt />
             <span class="user-name">{{userName}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu>
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-switch-button">退出登录</el-dropdown-item>
+            <!-- <el-dropdown-item @click.native="setting()" icon="el-icon-setting">个人设置</el-dropdown-item>
+            <el-dropdown-item @click.native="logout()" icon="el-icon-switch-button">退出登录</el-dropdown-item>-->
+            <el-dropdown-item command="setting" icon="el-icon-setting">个人设置</el-dropdown-item>
+            <el-dropdown-item command="logout" icon="el-icon-switch-button">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -99,6 +101,25 @@ export default {
     // 切换侧边栏的展开与收起
     toggleAside() {
       this.isOpen = !this.isOpen;
+    },
+    // 跳转个人设置
+    setting() {
+      this.$router.push("/setting");
+    },
+    // 退出登录
+    logout() {
+      // 1.清除用户信息
+      auth.delUser();
+      // 2.跳转到登录页面
+      this.$router.push("/login");
+    },
+    // 点击下拉菜单的处理函数
+    handelClick(command) {
+      // 判断点击的是个人设置还是退出登录
+      // 原来的逻辑  if判断
+      // 此时可以使用elment方法实现
+      // command正好就是要执行的函数名称
+      this[command]();
     }
   }
 };
