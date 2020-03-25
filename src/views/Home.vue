@@ -2,11 +2,13 @@
   <!-- 全屏容器 -->
   <el-container class="home-container">
     <!-- 侧边栏 -->
-    <el-aside class="my-aside" width="200px">
+    <el-aside class="my-aside" :width="isOpen?'200px':'60px'">
       <!-- logo -->
-      <div class="logo"></div>
+      <div class="logo" :class="{minLogo:!isOpen}"></div>
       <!-- 导航菜单 -->
       <el-menu
+        :collapse="!isOpen"
+        :collapse-transition="false"
         style="border-right:none"
         default-active="1"
         background-color="#002233"
@@ -48,14 +50,14 @@
       <!-- 头部 -->
       <el-header class="my-header">
         <!-- 图标 -->
-        <span class="el-icon-s-fold icon"></span>
+        <span class="el-icon-s-fold icon" @click="toggleAside"></span>
         <!-- 文字 -->
         <span class="text">崔总的公司</span>
         <!-- 下拉组件 -->
         <el-dropdown class="my-dropdown">
           <span class="el-dropdown-link">
-            <img class="user-avatar" src="../assets/avatar.jpg" alt />
-            <span class="user-name">崔倩</span>
+            <img class="user-avatar" :src="userPhoto" alt />
+            <span class="user-name">{{userName}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu>
@@ -74,8 +76,31 @@
 </template>
 
 <script>
+import auth from "@/utils/auth";
 export default {
-  name: "my-home"
+  name: "my-home",
+  data() {
+    return {
+      // 侧边栏是不是展开状态,默认是展开
+      isOpen: true,
+      // 用户名
+      userName: "",
+      userPhoto: ""
+      // 用户头像
+    };
+  },
+  created() {
+    // 1.从本地存储中获取数据
+    const user = auth.getUser();
+    this.userName = user.name;
+    this.userPhoto = user.photo;
+  },
+  methods: {
+    // 切换侧边栏的展开与收起
+    toggleAside() {
+      this.isOpen = !this.isOpen;
+    }
+  }
 };
 </script>
 
@@ -94,6 +119,11 @@ export default {
       height: 60px;
       background: #002244 url("../assets/logo_admin.png") no-repeat center /
         140px auto;
+    }
+    // 覆盖background的图片和大小
+    .minLogo {
+      background-image: url("../assets/logo_admin_01.png");
+      background-size: 36px auto;
     }
   }
   .my-header {

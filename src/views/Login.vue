@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import auth from "@/utils/auth.js";
 export default {
   name: "my-login",
   data() {
@@ -44,7 +45,7 @@ export default {
       // 登录表单数据
       loginForm: {
         mobile: "13911111111",
-        code: "264810"
+        code: "246810"
       },
       //   校验规则对象
       loginRules: {
@@ -73,7 +74,10 @@ export default {
           this.$http
             .post("authorizations", this.loginForm)
             .then(res => {
-              //   登录成功,跳转到首页
+              // 登录成功
+              // 存储用户信息
+              auth.setUser(res.data.data);
+              // 跳转到首页
               this.$router.push("/");
             })
             .catch(() => {
