@@ -9,6 +9,7 @@ import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome.vue'
 import NotFound from '../views/404.vue'
+import Article from '../views/Article.vue'
 
 // --导入auth模块
 import auth from '@/utils/auth'
@@ -23,9 +24,14 @@ const routes = [{
     path: '/',
     component: Home,
     children: [{
-      path: "/",
-      component: Welcome
-    }]
+        path: "/",
+        component: Welcome
+      },
+      {
+        path: "/article",
+        component: Article
+      }
+    ]
   },
   // 通配组件,如果路径不对,就跳转到404页面
   {

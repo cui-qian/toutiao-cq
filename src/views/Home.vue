@@ -10,7 +10,7 @@
         :collapse="!isOpen"
         :collapse-transition="false"
         style="border-right:none"
-        default-active="1"
+        default-active="/"
         background-color="#002233"
         text-color="#fff"
         active-text-color="#ffd04b"
