@@ -68,22 +68,35 @@ export default {
     // 登录函数,对整体表单进行验证
     login() {
       //   this.$refs.loginForm 就是组件实例   valid 代表整体表单是否校验成功
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
           // 校验成功,进行登录
-          this.$http
-            .post("authorizations", this.loginForm)
-            .then(res => {
-              // 登录成功
-              // 存储用户信息
-              auth.setUser(res.data.data);
-              // 跳转到首页
-              this.$router.push("/");
-            })
-            .catch(() => {
-              //   错误提示
-              this.$message.error("手机号或验证码错误");
-            });
+          // this.$http
+          //     .post("authorizations", this.loginForm)
+          //     .then(res => {
+          //     // 登录成功
+          //     // 存储用户信息
+          //     auth.setUser(res.data.data);
+          //     // 跳转到首页
+          //     this.$router.push("/");
+          //     })
+          //     .catch(() => {
+          //     //   错误提示
+          //     this.$message.error("手机号或验证码错误");
+          //     });
+
+          // async和await的写法
+          // res是响应报文对象(相应结果对象),响应主体数据 res.data
+          // 以下3句代码是理想情况下的代码,可能会报错
+          // ES语法:try{//可能出错的代码片段}catch(e){//捕获异常,前面的代码片段出现异常会执行catch里面的代码}
+          // catch(e)  e参数是 : error 错误对象, exception : 异常对象
+          try {
+            const res = await this.$http.post("authorizations", this.loginForm);
+            auth.setUser(res.data.data);
+            this.$router.push("/");
+          } catch (e) {
+            this.$message.error("手机号或验证码错误");
+          }
         }
       });
     }
