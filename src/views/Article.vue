@@ -3,13 +3,9 @@
     <!-- 筛选条件区域 -->
     <el-card>
       <!-- 头部(面包屑) -->
-      <div slot="header" class="clearfix">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-        </el-breadcrumb>
+      <div slot="header">
+        <my-bread>内容管理</my-bread>
       </div>
-
       <!-- 表单 -->
       <el-form label-width="80px" size="small">
         <el-form-item label="状态:">
@@ -48,23 +44,13 @@
       </el-form>
       <!-- 筛选结果区域 -->
     </el-card>
-    <my-test>
-      <!-- slot作用 : 当前标签的内容插入的插槽的名称 -->
-      <!-- slot-scope作用:接受插槽传递的所有数据,对象类型 : data === {info,abc}-->
-      <!-- <div slot="content" slot-scope="data">内容{{data.info}}</div> -->
-
-      <!-- v-slot:插槽名称="作用域数据(插槽上绑定的所有数据)变量名" -->
-      <!-- 注意: 使用v-slot指令,标签名必须是template -->
-      <template v-slot:content="scope">{{scope.info}}</template>
-      <div slot="footer">底部</div>
-    </my-test>
   </div>
 </template>
 
 <script>
-import MyTest from "@/components/test";
+import MyBread from "@/components/my-bread";
 export default {
-  components: { MyTest },
+  components: { MyBread },
   name: "my-article",
   data() {
     return {
