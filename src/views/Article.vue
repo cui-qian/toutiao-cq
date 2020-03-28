@@ -22,9 +22,9 @@
           <el-select v-model="reqParams.channel_id" placeholder="请选择">
             <el-option
               v-for="item in channelOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -77,12 +77,7 @@ export default {
         end_pubdate: null
       },
       // 频道下拉选项数据
-      channelOptions: [
-        {
-          value: 100,
-          label: "科技"
-        }
-      ],
+      channelOptions: [],
       // 时间选择框 [起始日期,结束日期]
       // 将来:当日期控件选择了日期后动态给 reqParams 中 begin_pubdate 和 end_pubdate 赋值
       dateArr: [],
@@ -91,11 +86,20 @@ export default {
     };
   },
   created() {
-    //测试获取后台数据
-    // this.$http
-    //   .get("articles")
-    //   .then(res => console.log(res.data))
-    //   .catch(() => console.log("失败"));
+    this.getchannelOptions();
+  },
+  methods: {
+    // 获取频道下拉选项数据
+    async getchannelOptions() {
+      // 获取数据后 res ==={data:'响应主体'}
+      // 解构(针对res) : 获取到响应数据 data ==={message:'ok',data:{channels:[频道下拉选项数据]}}
+      const {
+        data: { data }
+      } = await this.$http.get("channels");
+      // 拿到数据后进行赋值
+      //   此时的this.channelOptions=[id:'频道id',name:'频道名称']
+      this.channelOptions = data.channels;
+    }
   }
 };
 </script>
