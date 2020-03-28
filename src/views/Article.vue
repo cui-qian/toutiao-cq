@@ -48,11 +48,23 @@
       </el-form>
       <!-- 筛选结果区域 -->
     </el-card>
+    <my-test>
+      <!-- slot作用 : 当前标签的内容插入的插槽的名称 -->
+      <!-- slot-scope作用:接受插槽传递的所有数据,对象类型 : data === {info,abc}-->
+      <!-- <div slot="content" slot-scope="data">内容{{data.info}}</div> -->
+
+      <!-- v-slot:插槽名称="作用域数据(插槽上绑定的所有数据)变量名" -->
+      <!-- 注意: 使用v-slot指令,标签名必须是template -->
+      <template v-slot:content="scope">{{scope.info}}</template>
+      <div slot="footer">底部</div>
+    </my-test>
   </div>
 </template>
 
 <script>
+import MyTest from "@/components/test";
 export default {
+  components: { MyTest },
   name: "my-article",
   data() {
     return {
@@ -73,7 +85,7 @@ export default {
         }
       ],
       // 时间选择框 [起始日期,结束日期]
-      // 当日期控件选择了日期后动态给 reqParams 中 begin_pubdate 和 end_pubdate 赋值
+      // 将来:当日期控件选择了日期后动态给 reqParams 中 begin_pubdate 和 end_pubdate 赋值
       dateArr: []
     };
   },
