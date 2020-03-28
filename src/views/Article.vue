@@ -49,9 +49,9 @@
       <!-- 表格-->
       <el-table :data="articles">
         <el-table-column label="封面"></el-table-column>
-        <el-table-column label="标题"></el-table-column>
+        <el-table-column label="标题" prop="title"></el-table-column>
         <el-table-column label="状态"></el-table-column>
-        <el-table-column label="发布时间"></el-table-column>
+        <el-table-column label="发布时间" prop="pubdate"></el-table-column>
         <el-table-column label="操作"></el-table-column>
       </el-table>
       <!-- 分页 -->
@@ -74,7 +74,9 @@ export default {
         // 频道
         channel_id: null,
         begin_pubdate: null,
-        end_pubdate: null
+        end_pubdate: null,
+        page: 1, //默认第一页
+        per_page: 20 //一页显示20条
       },
       // 频道下拉选项数据
       channelOptions: [],
@@ -86,11 +88,12 @@ export default {
     };
   },
   created() {
-    this.getchannelOptions();
+    this.getChannelOptions();
+    this.getArticles();
   },
   methods: {
     // 获取频道下拉选项数据
-    async getchannelOptions() {
+    async getChannelOptions() {
       // 获取数据后 res ==={data:'响应主体'}
       // 解构(针对res) : 获取到响应数据 data ==={message:'ok',data:{channels:[频道下拉选项数据]}}
       const {
@@ -99,6 +102,12 @@ export default {
       // 拿到数据后进行赋值
       //   此时的this.channelOptions=[id:'频道id',name:'频道名称']
       this.channelOptions = data.channels;
+    },
+    async getArticles() {
+      const {
+        data: { data }
+      } = await this.$http.get("articles", { params: this.reqParams });
+      this.articles = data.results;
     }
   }
 };
