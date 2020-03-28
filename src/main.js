@@ -11,16 +11,21 @@ import App from './App.vue';
 // @代表src的绝对路径,vue-cli下才可使用
 import axios from '@/api'
 
+
+// 使用自己封装的插件
+import plugin from '@/utils/plugin'
+Vue.use(plugin)
+
 // 挂载axios
 Vue.prototype.$http = axios
 
 Vue.use(ElementUI);
 
 new Vue({
-  el: '#app',
-  render: h => h(App),
-  //挂载路由实例
-  router
+    el: '#app',
+    render: h => h(App),
+    //挂载路由实例
+    router
 });
 
 
