@@ -45,7 +45,7 @@
     </el-card>
     <!-- 筛选结果区域 -->
     <el-card style="margin-top:20px">
-      <div slot="header">根据筛选条件共查询到 0 条结果 :</div>
+      <div slot="header">根据筛选条件共查询到 {{total}} 条结果 :</div>
       <!-- 表格-->
       <el-table :data="articles">
         <el-table-column label="封面">
@@ -58,9 +58,17 @@
           </template>
         </el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
-        <el-table-column label="状态"></el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status===0" type="info">草稿</el-tag>
+            <el-tag v-if="scope.row.status===1">待审核</el-tag>
+            <el-tag v-if="scope.row.status===2" type="success">审核通过</el-tag>
+            <el-tag v-if="scope.row.status===3" type="warning">审核失败</el-tag>
+            <el-tag v-if="scope.row.status===4" type="danger">已删除</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="120px">
           <template slot-scope="scope">
             <!-- 编辑 -->
             <el-button
@@ -82,7 +90,15 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="1000"></el-pagination>
+      <el-pagination
+        style="margin-top:20px"
+        background
+        :page-size="reqParams.per_page"
+        layout="prev, pager, next"
+        :current-page="reqParams.page"
+        :total="total"
+        @current-change="changePager"
+      ></el-pagination>
     </el-card>
   </div>
 </template>
@@ -103,7 +119,7 @@ export default {
         begin_pubdate: null,
         end_pubdate: null,
         page: 1, //默认第一页
-        per_page: 20 //一页显示20条
+        per_page: 40 //一页显示20条
       },
       // 频道下拉选项数据
       channelOptions: [],
@@ -111,7 +127,9 @@ export default {
       // 将来:当日期控件选择了日期后动态给 reqParams 中 begin_pubdate 和 end_pubdate 赋值
       dateArr: [],
       // 文章列表
-      articles: []
+      articles: [],
+      // 文章总条数
+      total: 0
     };
   },
   created() {
@@ -135,6 +153,14 @@ export default {
         data: { data }
       } = await this.$http.get("articles", { params: this.reqParams });
       this.articles = data.results;
+      this.total = data.total_count;
+    },
+
+    // 进行分页
+    changePager(newPage) {
+      // 根据新的页码 ,重新获取列表数据即可
+      this.reqParams.page = newPage;
+      this.getArticles();
     },
 
     // 编辑
