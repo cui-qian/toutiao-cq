@@ -83,7 +83,7 @@
               icon="el-icon-edit"
               circle
               plain
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="editArticle(scope.row.id, scope.row)"
             ></el-button>
             <!-- 删除 -->
             <el-button
@@ -200,9 +200,9 @@ export default {
       if (value === "") this.reqParams.channel_id = null;
     },
 
-    // 编辑
-    handleEdit(index, row) {
-      console.log(index, row);
+    // 编辑文章
+    editArticle(id, row) {
+      this.$router.push(`/publish?id=${id}`);
     },
     // 删除
     handleDelete(index, row) {
