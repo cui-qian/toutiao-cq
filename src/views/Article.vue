@@ -83,15 +83,15 @@
               icon="el-icon-edit"
               circle
               plain
-              @click="editArticle(scope.row.id, scope.row)"
+              @click="editArticle(scope.row.id)"
             ></el-button>
             <!-- 删除 -->
             <el-button
+              @click="deleteArticle(scope.row.id)"
               type="danger"
               icon="el-icon-delete"
               circle
               plain
-              @click="handleDelete(scope.$index, scope.row)"
             ></el-button>
           </template>
         </el-table-column>
@@ -205,8 +205,28 @@ export default {
       this.$router.push(`/publish?id=${id}`);
     },
     // 删除
-    handleDelete(index, row) {
-      console.log(index, row);
+    deleteArticle(id) {
+      // 确认框
+      this.$confirm("此操作将永久删除该文章, 是否继续?", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          // 点击确认
+          try {
+            // 发删除请求
+            await this.$http.delete(`articles/${id}`);
+            // 成功提示
+            this.$message.success("删除成功");
+            // 更新列表
+            this.getArticles();
+          } catch (e) {
+            // 错误提示
+            this.$message.error("删除失败");
+          }
+        })
+        .catch(() => {});
     }
   }
 };
