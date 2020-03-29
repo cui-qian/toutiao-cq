@@ -19,7 +19,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道:">
-          <el-select v-model="reqParams.channel_id" placeholder="请选择">
+          <el-select
+            @change="changeChannel"
+            clearable
+            v-model="reqParams.channel_id"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in channelOptions"
               :key="item.id"
@@ -36,10 +41,12 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            @change="changeDate"
+            value-format="yyyy-MM-dd"
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="mini">筛选</el-button>
+          <el-button type="primary" @click="filterArticle()">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -90,6 +97,7 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
+      <!-- 当前页码  :current-page="reqParams.page" ; 每页显示多少条  :page-size="reqParams.per_page" ; 切换页面  @current-change="changePager" -->
       <el-pagination
         style="margin-top:20px"
         background
@@ -161,6 +169,35 @@ export default {
       // 根据新的页码 ,重新获取列表数据即可
       this.reqParams.page = newPage;
       this.getArticles();
+    },
+    // 改变日期
+    changeDate(dateArr) {
+      // 1.根据选择的时间给起始和结束数据赋值
+      // 现在的日期格式是标准日期格式 Date格式
+      // 后台接口要求字符串格式的日期   例如 :'2020-10-10'
+      // 在给起始和结束数据赋值前 , 转换格式为字符串格式
+      // console.log(dateArr);
+      // 如果清空日期操作,dateArr等于null
+      if (dateArr) {
+        this.reqParams.begin_pubdate = dateArr[0];
+        this.reqParams.end_pubdate = dateArr[1];
+      } else {
+        this.reqParams.begin_pubdate = null;
+        this.reqParams.end_pubdate = null;
+      }
+    },
+
+    // 筛选文章
+    filterArticle() {
+      // 回到第一页
+      this.reqParams.page = 1;
+      // 根据reqParams进行查询
+      this.getArticles();
+    },
+    // 选择频道
+    changeChannel(value) {
+      // 清空的时候值是 ''  ,不符合后台要求 ,应该改为null,代表查询全部
+      if (value === "") this.reqParams.channel_id = null;
     },
 
     // 编辑
