@@ -48,11 +48,38 @@
       <div slot="header">根据筛选条件共查询到 0 条结果 :</div>
       <!-- 表格-->
       <el-table :data="articles">
-        <el-table-column label="封面"></el-table-column>
+        <el-table-column label="封面">
+          <template slot-scope="scope">
+            <el-image fit="cover" :src="scope.row.cover.images[0]" style="width:150px;height:100px">
+              <div slot="error" class="image-slot">
+                <img src="../assets/error.gif" alt style="width:150px;height:100px" />
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
         <el-table-column label="状态"></el-table-column>
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
-        <el-table-column label="操作"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <!-- 编辑 -->
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              plain
+              @click="handleEdit(scope.$index, scope.row)"
+            ></el-button>
+            <!-- 删除 -->
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              plain
+              @click="handleDelete(scope.$index, scope.row)"
+            ></el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 分页 -->
       <el-pagination style="margin-top:20px" background layout="prev, pager, next" :total="1000"></el-pagination>
@@ -108,6 +135,15 @@ export default {
         data: { data }
       } = await this.$http.get("articles", { params: this.reqParams });
       this.articles = data.results;
+    },
+
+    // 编辑
+    handleEdit(index, row) {
+      console.log(index, row);
+    },
+    // 删除
+    handleDelete(index, row) {
+      console.log(index, row);
     }
   }
 };
