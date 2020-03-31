@@ -23,7 +23,7 @@
               class="el-icon-star-off"
               :style="{color:item.is_collected?'red':'#fff'}"
             ></span>
-            <span class="el-icon-delete"></span>
+            <span @click="deleteImage(item)" class="el-icon-delete"></span>
           </div>
         </div>
       </div>
@@ -98,6 +98,23 @@ export default {
       } catch {
         this.$message.success("操作失败");
       }
+    },
+    deleteImage(item) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          try {
+            await this.$http.delete(`user/images/${item.id}`);
+            this.$message.success("删除成功");
+            this.getImages();
+          } catch (e) {
+            this.$message.error("删除失败");
+          }
+        })
+        .catch(() => {});
     }
   }
 };
