@@ -18,13 +18,20 @@
           size="small"
         >添加素材</el-button>
         <!-- 对话框 -->
-        <el-dialog
-          title="添加素材"
-          :visible.sync="dialogVisible"
-          width="300px"
-          :before-close="handleClose"
-        >
-          <span>上传组件</span>
+        <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
+          <span>
+            <el-upload
+              class="avatar-uploader"
+              action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+              name="image"
+              :headers="headers"
+              :show-file-list="false"
+              :on-success="uploadImageSuccess"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </span>
         </el-dialog>
       </div>
       <!-- 图片列表 -->
@@ -55,6 +62,7 @@
 </template>
 
 <script>
+import auth from "@/utils/auth";
 export default {
   name: "my-image",
   data() {
@@ -71,7 +79,13 @@ export default {
       // 总条数
       total: 0,
       // 控制对话框显示与隐藏
-      dialogVisible: false
+      dialogVisible: false,
+      // 上传成功后的图片地址 ,用来预览上传成功后的图片
+      imageUrl: null,
+      // 上传组件的请求头headers
+      headers: {
+        Authorization: `Bearer ${auth.getUser().token}`
+      }
     };
   },
   created() {
@@ -138,6 +152,23 @@ export default {
       // 1.准备对话框
       // 2.打开对话框
       this.dialogVisible = true;
+    },
+    // 添加素材
+    uploadImageSuccess(res) {
+      // 预览
+      this.imageUrl = res.data.url;
+      // 提示
+      this.$message.success("上传素材成功");
+      // 3s后
+      window.setTimeout(() => {
+        // 关闭对话框
+        this.dialogVisible = false;
+        // 跳转第一页
+        this.reqParams.page = 1;
+        this.getImages();
+        // 考虑重新打开对话框时,清除上一次的图片预览
+        this.imageUrl = null;
+      }, 3000);
     }
   }
 };

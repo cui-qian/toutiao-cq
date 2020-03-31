@@ -11,6 +11,9 @@ import App from './App.vue';
 // @代表src的绝对路径,vue-cli下才可使用
 import axios from '@/api'
 
+// 导入公用样式
+import '@/styles/index.less'
+
 
 // 使用自己封装的插件
 import plugin from '@/utils/plugin'
