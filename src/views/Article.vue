@@ -19,19 +19,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道:">
-          <el-select
-            @change="changeChannel"
-            clearable
-            v-model="reqParams.channel_id"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in channelOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <!-- 自己封装的组件 -->
+          <!-- <my-channel :value="reqParams.channel_id" @input="reqParams.channel_id=$event"></my-channel> -->
+          <!-- v-model 是 :value和@input的简写,所以只写v-model就可以  -->
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
         <el-form-item label="日期:">
           <el-date-picker
@@ -122,15 +113,12 @@ export default {
       reqParams: {
         // 当字段的值为null的时候,这个数据不会发送个后台
         status: null,
-        // 频道
         channel_id: null,
         begin_pubdate: null,
         end_pubdate: null,
         page: 1, //默认第一页
         per_page: 40 //一页显示20条
       },
-      // 频道下拉选项数据
-      channelOptions: [],
       // 时间选择框 [起始日期,结束日期]
       // 将来:当日期控件选择了日期后动态给 reqParams 中 begin_pubdate 和 end_pubdate 赋值
       dateArr: [],
@@ -141,21 +129,9 @@ export default {
     };
   },
   created() {
-    this.getChannelOptions();
     this.getArticles();
   },
   methods: {
-    // 获取频道下拉选项数据
-    async getChannelOptions() {
-      // 获取数据后 res ==={data:'响应主体'}
-      // 解构(针对res) : 获取到响应数据 data ==={message:'ok',data:{channels:[频道下拉选项数据]}}
-      const {
-        data: { data }
-      } = await this.$http.get("channels");
-      // 拿到数据后进行赋值
-      //   此时的this.channelOptions=[id:'频道id',name:'频道名称']
-      this.channelOptions = data.channels;
-    },
     async getArticles() {
       const {
         data: { data }
@@ -193,11 +169,6 @@ export default {
       this.reqParams.page = 1;
       // 根据reqParams进行查询
       this.getArticles();
-    },
-    // 选择频道
-    changeChannel(value) {
-      // 清空的时候值是 ''  ,不符合后台要求 ,应该改为null,代表查询全部
-      if (value === "") this.reqParams.channel_id = null;
     },
 
     // 编辑文章
