@@ -18,7 +18,11 @@
         <div class="img_item" v-for="item in images" :key="item.id">
           <img :src="item.url" alt />
           <div class="option" v-if="!reqParams.collect">
-            <span class="el-icon-star-off" :style="{color:item.is_collected?'red':'#fff'}"></span>
+            <span
+              @click="toggleStatus(item)"
+              class="el-icon-star-off"
+              :style="{color:item.is_collected?'red':'#fff'}"
+            ></span>
             <span class="el-icon-delete"></span>
           </div>
         </div>
@@ -76,6 +80,24 @@ export default {
     changeCollect() {
       this.reqParams.page = 1;
       this.getImages();
+    },
+    // 切换添加收藏与取消收藏
+    async toggleStatus(item) {
+      try {
+        const {
+          data: { data }
+        } = await this.$http.put(`user/images/${item.id}`, {
+          collect: !item.is_collected
+        });
+        // data.collect  修改后的图片状态
+        // 提示
+        this.$message.success(data.collect ? "添加收藏成功" : "取消收藏成功");
+        // 视图 : 更改按钮颜色样式
+        // item 就是渲染当前图片中收藏按钮的样式 , 修改item就可驱动视图修改
+        item.is_collected = data.collect;
+      } catch {
+        this.$message.success("操作失败");
+      }
     }
   }
 };
@@ -108,7 +130,7 @@ export default {
       color: #fff;
       background-color: rgba(0, 0, 0, 0.3);
       span {
-        margin: 0 30px;
+        margin: 0 20px;
       }
     }
   }
