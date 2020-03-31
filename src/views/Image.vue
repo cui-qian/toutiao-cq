@@ -24,7 +24,14 @@
         </div>
       </div>
       <!-- 分页 -->
-      <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        @current-change="changePage"
+        :total="total"
+        :page-size="reqParams.per_page"
+        :current-page="reqParams.page"
+      ></el-pagination>
     </el-card>
   </div>
 </template>
@@ -42,7 +49,9 @@ export default {
         per_page: 10
       },
       // 素材列表,
-      images: []
+      images: [],
+      // 总条数
+      total: 0
     };
   },
   created() {
@@ -56,6 +65,12 @@ export default {
         params: this.reqParams
       });
       this.images = data.results;
+      this.total = data.total_count;
+    },
+    // 切换分页
+    changePage(newPage) {
+      this.reqParams.page = newPage;
+      this.getImages();
     }
   }
 };
