@@ -1,5 +1,5 @@
 <template>
-  <div class="publish-container">publish-container</div>
+  <div class="publish-container">publish</div>
 </template>
 
 <script>
