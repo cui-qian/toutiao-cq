@@ -11,7 +11,21 @@
           <el-radio-button :label="false">全部</el-radio-button>
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
-        <el-button type="success" style="float:right" size="small">添加收藏</el-button>
+        <el-button
+          @click="openAddImageDialog()"
+          type="success"
+          style="float:right"
+          size="small"
+        >添加素材</el-button>
+        <!-- 对话框 -->
+        <el-dialog
+          title="添加素材"
+          :visible.sync="dialogVisible"
+          width="300px"
+          :before-close="handleClose"
+        >
+          <span>上传组件</span>
+        </el-dialog>
       </div>
       <!-- 图片列表 -->
       <div class="img_list">
@@ -55,7 +69,9 @@ export default {
       // 素材列表,
       images: [],
       // 总条数
-      total: 0
+      total: 0,
+      // 控制对话框显示与隐藏
+      dialogVisible: false
     };
   },
   created() {
@@ -99,6 +115,7 @@ export default {
         this.$message.success("操作失败");
       }
     },
+    // 删除图片素材
     deleteImage(item) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "温馨提示", {
         confirmButtonText: "确定",
@@ -115,6 +132,12 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    // 打开添加素材的对话框
+    openAddImageDialog() {
+      // 1.准备对话框
+      // 2.打开对话框
+      this.dialogVisible = true;
     }
   }
 };
