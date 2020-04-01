@@ -2,7 +2,7 @@
   <div class="my-cover">
     <!-- 图片按钮 -->
     <div class="btn_img" @click="openDialog">
-      <img src="../assets/default.png" alt />
+      <img :src="coverImageUrl" alt />
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible" width="720px">
@@ -52,7 +52,7 @@
       </el-tabs>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="confirmImage">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -60,6 +60,7 @@
 
 <script>
 import auth from "@/utils/auth";
+import defaultImg from "../assets/default.png";
 export default {
   name: "my-cover",
   data() {
@@ -86,7 +87,9 @@ export default {
         Authorization: `Bearer ${auth.getUser().token}`
       },
       // 上传的图片地址
-      uploadImageUrl: null
+      uploadImageUrl: null,
+      // 封面地址
+      coverImageUrl: defaultImg
     };
   },
   methods: {
@@ -96,6 +99,10 @@ export default {
       // 只有用户打开了对话框,才有选择素材的需求,再去加载数据才是合理的
       // 每次打开对话框都可以拿到最新的素材数据
       this.getImages();
+      // 重置数据
+      this.selectedImageUrl = null;
+      this.uploadImageUrl = null;
+      this.activeName = "image";
     },
     // 获取图片列表
     async getImages() {
@@ -123,6 +130,25 @@ export default {
     uploadImageSuccess(res) {
       this.uploadImageUrl = res.data.url;
       this.$message.success("上传图片成功");
+    },
+    // 确认图片
+    confirmImage() {
+      if (this.activeName === "image") {
+        // 激活素材库
+        if (!this.selectedImageUrl) {
+          return this.$message.warning("请先选中一张图片");
+        }
+        this.coverImageUrl = this.selectedImageUrl;
+      }
+      if (this.activeName === "upload") {
+        // 激活上传图片
+        if (!this.uploadImageUrl) {
+          return this.$message.warning("请先上传一张图片");
+        }
+        this.coverImageUrl = this.uploadImageUrl;
+      }
+      // 关闭对话框
+      this.dialogVisible = false;
     }
   }
 };
