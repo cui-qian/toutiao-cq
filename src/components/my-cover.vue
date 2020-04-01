@@ -36,7 +36,19 @@
             hide-on-single-page
           ></el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="上传" name="upload">上传图片内容</el-tab-pane>
+        <el-tab-pane label="上传" name="upload">
+          <el-upload
+            class="avatar-uploader"
+            action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+            name="image"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="uploadImageSuccess"
+          >
+            <img v-if="uploadImageUrl" :src="uploadImageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -47,6 +59,7 @@
 </template>
 
 <script>
+import auth from "@/utils/auth";
 export default {
   name: "my-cover",
   data() {
@@ -67,7 +80,13 @@ export default {
       // 图片素材列表
       images: [],
       // 选中的图片地址
-      selectedImageUrl: null
+      selectedImageUrl: null,
+      // 请求头
+      headers: {
+        Authorization: `Bearer ${auth.getUser().token}`
+      },
+      // 上传的图片地址
+      uploadImageUrl: null
     };
   },
   methods: {
@@ -99,6 +118,11 @@ export default {
     // 选中图片
     selectedImage(url) {
       this.selectedImageUrl = url;
+    },
+    // 上传图片成功的方法
+    uploadImageSuccess(res) {
+      this.uploadImageUrl = res.data.url;
+      this.$message.success("上传图片成功");
     }
   }
 };
