@@ -9,18 +9,26 @@
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="素材库" name="image">
           <!-- 切换按钮 -->
-          <el-radio-group v-model="reqParams.collect" size="small">
+          <el-radio-group @change="changeCollect" v-model="reqParams.collect" size="small">
             <el-radio-button :label="false">全部</el-radio-button>
             <el-radio-button :label="true">收藏</el-radio-button>
           </el-radio-group>
           <!-- 素材列表 -->
           <div class="img_list">
-            <div class="img_item" v-for="i in 8" :key="i">
-              <img src="../assets/avatar.jpg" alt />
+            <div class="img_item" v-for="item in images" :key="item.id">
+              <img :src="item.url" alt />
             </div>
           </div>
           <!-- 分页组件 -->
-          <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+          <el-pagination
+            @current-change="changePage"
+            background
+            layout="prev, pager, next"
+            :total="total"
+            :page-size="reqParams.per_page"
+            :current-page="reqParams.page"
+            hide-on-single-page
+          ></el-pagination>
         </el-tab-pane>
         <el-tab-pane label="上传" name="upload">上传图片内容</el-tab-pane>
       </el-tabs>
@@ -47,12 +55,38 @@ export default {
         collect: false,
         page: 1,
         per_page: 8
-      }
+      },
+      // 总条数
+      total: 0,
+      // 图片素材列表
+      images: []
     };
   },
   methods: {
+    // 对话框的打开与关闭
     openDialog() {
       this.dialogVisible = true;
+      // 只有用户打开了对话框,才有选择素材的需求,再去加载数据才是合理的
+      // 每次打开对话框都可以拿到最新的素材数据
+      this.getImages();
+    },
+    // 获取图片列表
+    async getImages() {
+      const {
+        data: { data }
+      } = await this.$http.get("user/images", { params: this.reqParams });
+      this.total = data.total_count;
+      this.images = data.results;
+    },
+    // 切换全部与收藏
+    changeCollect() {
+      this.reqParams.page = 1;
+      this.getImages();
+    },
+    // 分页功能
+    changePage(newPage) {
+      this.reqParams.page = newPage;
+      this.getImages();
     }
   }
 };
