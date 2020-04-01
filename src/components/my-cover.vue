@@ -15,14 +15,20 @@
           </el-radio-group>
           <!-- 素材列表 -->
           <div class="img_list">
-            <div class="img_item" v-for="item in images" :key="item.id">
+            <div
+              :class="{selected:item.url===selectedImageUrl}"
+              @click="selectedImage(item.url)"
+              class="img_item"
+              v-for="item in images"
+              :key="item.id"
+            >
               <img :src="item.url" alt />
             </div>
           </div>
           <!-- 分页组件 -->
           <el-pagination
             @current-change="changePage"
-            background
+            backgroundd
             layout="prev, pager, next"
             :total="total"
             :page-size="reqParams.per_page"
@@ -59,7 +65,9 @@ export default {
       // 总条数
       total: 0,
       // 图片素材列表
-      images: []
+      images: [],
+      // 选中的图片地址
+      selectedImageUrl: null
     };
   },
   methods: {
@@ -87,6 +95,10 @@ export default {
     changePage(newPage) {
       this.reqParams.page = newPage;
       this.getImages();
+    },
+    // 选中图片
+    selectedImage(url) {
+      this.selectedImageUrl = url;
     }
   }
 };
@@ -108,6 +120,7 @@ export default {
 .img_list {
   margin-top: 20px;
   .img_item {
+    position: relative;
     width: 150px;
     height: 120px;
     border: 1px dashed #ddd;
@@ -117,6 +130,17 @@ export default {
       width: 100%;
       height: 100%;
       display: block;
+    }
+    // 给 .img_item 加上一个selected类名 这个类加一个伪元素
+    &.selected::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3) url("../assets/selected.png") no-repeat
+        center / 50px 50px;
     }
   }
 }
