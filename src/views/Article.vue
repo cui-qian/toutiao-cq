@@ -172,7 +172,7 @@ export default {
     },
 
     // 编辑文章
-    editArticle(id, row) {
+    editArticle(id) {
       this.$router.push(`/publish?id=${id}`);
     },
     // 删除

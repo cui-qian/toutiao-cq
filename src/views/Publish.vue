@@ -2,7 +2,7 @@
   <div class="publish-container">
     <el-card>
       <div slot="header">
-        <my-bread>发布文章</my-bread>
+        <my-bread>{{$route.query.id?'修改文章':'发布文章'}}</my-bread>
       </div>
       <!-- 表单 -->
       <el-form label-width="120px">
@@ -37,7 +37,10 @@
           <!-- 频道组件 -->
           <my-channel v-model="articleForm.channel_id"></my-channel>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="$route.query.id">
+          <el-button type="success" @click="updateArticle()">修改文章</el-button>
+        </el-form-item>
+        <el-form-item v-else>
           <el-button @click="addArticle(false)" type="primary">发布文章</el-button>
           <el-button @click="addArticle(true)">存入草稿</el-button>
         </el-form-item>
@@ -63,7 +66,7 @@ export default {
     return {
       // 文章表单数据对象
       articleForm: {
-        title: "",
+        title: null,
         content: null,
         cover: {
           type: 1,
@@ -89,7 +92,34 @@ export default {
       }
     };
   },
+  created() {
+    // 如果地址栏上有id就是修改文章，获取文章信息填充表单
+    if (this.$route.query.id) {
+      this.getArticle();
+    }
+  },
+  watch: {
+    "$route.query.id": function() {
+      // 监听 this.$route.query.id 的数据变化
+      if (this.$route.query.id) {
+        // 填充表单
+        this.getArticle();
+      } else {
+        // 清空表单
+        this.articleForm = {
+          title: null,
+          content: null,
+          cover: {
+            type: 1,
+            images: []
+          },
+          channel_id: null
+        };
+      }
+    }
+  },
   methods: {
+    // 添加文章
     async addArticle(draft) {
       // draft 参数，false 发布  true 草稿，正好就是后台接口需要的数据
       try {
@@ -98,6 +128,27 @@ export default {
         this.$router.push("/article");
       } catch (e) {
         this.$message.error("操作失败");
+      }
+    },
+    // 获取文章信息
+    async getArticle() {
+      const {
+        data: { data }
+      } = await this.$http.get(`articles/${this.$route.query.id}`);
+      this.articleForm = data;
+    },
+    // 修改文章
+    async updateArticle() {
+      try {
+        await this.$http.put(
+          `articles/${this.$route.query.id}?draft=false`,
+          this.articleForm
+        );
+        console.log("haha");
+        this.$message.success("修改文章成功");
+        this.$router.push("/article");
+      } catch (e) {
+        this.$message.error("修改文章失败");
       }
     }
   }

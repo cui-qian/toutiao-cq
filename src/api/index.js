@@ -15,7 +15,7 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 //axios.defaults.headers.Authorization = `Bearer ${auth.getUser().token}`
 
 // 1.transforResponse配置中的函数     2.在响应拦截前配置信息    3.then().catch()
-axios.default.transformResponse = [data => {
+axios.defaults.transformResponse = [data => {
     // data就是后台原始响应数据 理想情况下 :json字符串
     // 其实现在后台接口有时候反奶的不是json字符串 ,结果来进行转换是会报错的
     // 转化后的数据要return出去
