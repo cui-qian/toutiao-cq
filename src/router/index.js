@@ -12,6 +12,7 @@ import NotFound from '../views/404.vue'
 import Article from '../views/Article.vue'
 import Image from '../views/Image.vue'
 import Publish from '../views/Publish.vue'
+import Comment from '../views/Comment.vue'
 
 // --导入auth模块
 import auth from '@/utils/auth'
@@ -40,6 +41,10 @@ const routes = [{
             {
                 path: "/publish",
                 component: Publish
+            },
+            {
+                path: "/comment",
+                component: Comment
             }
         ]
     },
