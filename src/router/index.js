@@ -13,6 +13,8 @@ import Article from '../views/Article.vue'
 import Image from '../views/Image.vue'
 import Publish from '../views/Publish.vue'
 import Comment from '../views/Comment.vue'
+import Fans from '../views/Fans.vue'
+
 
 // --导入auth模块
 import auth from '@/utils/auth'
@@ -45,6 +47,10 @@ const routes = [{
             {
                 path: "/comment",
                 component: Comment
+            },
+            {
+                path: "/fans",
+                component: Fans
             }
         ]
     },
