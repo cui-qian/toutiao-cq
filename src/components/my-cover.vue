@@ -2,7 +2,8 @@
   <div class="my-cover">
     <!-- 图片按钮 -->
     <div class="btn_img" @click="openDialog">
-      <img :src="coverImageUrl" alt />
+      <!-- 保证父组件传入的图片地址是空的时候, 就显示默认图 -->
+      <img :src="value||coverImageUrl" alt />
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible" width="720px">
@@ -63,6 +64,8 @@ import auth from "@/utils/auth";
 import defaultImg from "../assets/default.png";
 export default {
   name: "my-cover",
+  // 父传给子的图片地址
+  props: ["value"],
   data() {
     return {
       // 控制对话框显示与隐藏
@@ -138,14 +141,20 @@ export default {
         if (!this.selectedImageUrl) {
           return this.$message.warning("请先选中一张图片");
         }
-        this.coverImageUrl = this.selectedImageUrl;
+        // 预览
+        // this.coverImageUrl = this.selectedImageUrl;
+        // 提交给父组件,让父组件给绑定的数据赋值
+        this.$emit("input", this.selectedImageUrl);
       }
       if (this.activeName === "upload") {
         // 激活上传图片
         if (!this.uploadImageUrl) {
           return this.$message.warning("请先上传一张图片");
         }
-        this.coverImageUrl = this.uploadImageUrl;
+        // 预览
+        // this.coverImageUrl = this.uploadImageUrl;
+        // 提交给父组件,让父组件给绑定的数据赋值
+        this.$emit("input", this.uploadImageUrl);
       }
       // 关闭对话框
       this.dialogVisible = false;

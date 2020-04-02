@@ -22,7 +22,7 @@
           </el-radio-group>
           <div style="margin-top:10px">
             <!-- 封面组件 -->
-            <my-cover></my-cover>
+            <my-cover v-model="articleForm.cover.images[0]"></my-cover>
           </div>
         </el-form-item>
         <el-form-item label="频道">
