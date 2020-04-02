@@ -11,12 +11,17 @@
         <el-table-column label="粉丝评论数" prop="fans_comment_count"></el-table-column>
         <el-table-column label="评论状态">
           <!-- 值为false->代表正常  true->代表关闭 -->
-          <template slot-scope="scope">{{scope.row.comment_status?'关闭':'正常'}}</template>
+          <template slot-scope="scope">{{scope.row.comment_status?'正常':'关闭'}}</template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="small" v-if="scope.row.comment_status" type="danger">关闭评论</el-button>
-            <el-button size="small" v-else type="success">打开评论</el-button>
+            <el-button
+              @click="toggleStatus(scope.row)"
+              size="small"
+              v-if="scope.row.comment_status"
+              type="danger"
+            >关闭评论</el-button>
+            <el-button @click="toggleStatus(scope.row)" size="small" v-else type="success">打开评论</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -68,6 +73,24 @@ export default {
     changePage(newPage) {
       this.reqParams.page = newPage;
       this.getComments();
+    },
+    // 切换评论状态
+    async toggleStatus(row) {
+      // row 当前行数据 , 其实可以理解成 comments 数组遍历的时候每一项数据
+      try {
+        const {
+          data: { data }
+        } = await this.$http.put(`comments/status?article_id=${row.id}`, {
+          allow_comment: !row.comment_status
+        });
+        this.$message.success(
+          data.allow_comment ? "打开评论成功" : "关闭评论成功"
+        );
+        // 更新当前行的数据状态
+        row.comment_status = data.allow_comment;
+      } catch (e) {
+        this.$message.error("操作失败");
+      }
     }
   }
 };
