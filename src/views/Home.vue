@@ -80,6 +80,7 @@
 
 <script>
 import auth from "@/utils/auth";
+import eventBus from "@/utils/eventBus";
 export default {
   name: "my-home",
   data() {
@@ -95,8 +96,13 @@ export default {
   created() {
     // 1.从本地存储中获取数据
     const user = auth.getUser();
+    // 给data中数据赋值
     this.userName = user.name;
     this.userPhoto = user.photo;
+    // 接收setting组件的传的用户名称的值
+    eventBus.$on("updateUserName", data => {
+      this.userName = data;
+    });
   },
   methods: {
     // 切换侧边栏的展开与收起

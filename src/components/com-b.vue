@@ -4,7 +4,6 @@
     <button @click="fn">b传值给a</button>
   </div>
 </template>
-
 <script>
 import eventBus from "@/utils/eventBus";
 export default {
