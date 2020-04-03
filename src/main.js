@@ -15,6 +15,7 @@ import axios from '@/api'
 import '@/styles/index.less'
 
 
+
 // 使用自己封装的插件
 import plugin from '@/utils/plugin'
 Vue.use(plugin)
