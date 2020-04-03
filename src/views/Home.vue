@@ -103,6 +103,10 @@ export default {
     eventBus.$on("updateUserName", data => {
       this.userName = data;
     });
+    // 接受setting中头像
+    eventBus.$on("updateUserPhoto", data => {
+      this.userPhoto = data;
+    });
   },
   methods: {
     // 切换侧边栏的展开与收起
