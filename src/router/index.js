@@ -14,6 +14,7 @@ import Image from '../views/Image.vue'
 import Publish from '../views/Publish.vue'
 import Comment from '../views/Comment.vue'
 import Fans from '../views/Fans.vue'
+import Setting from '../views/Setting.vue'
 
 
 // --导入auth模块
@@ -51,6 +52,10 @@ const routes = [{
             {
                 path: "/fans",
                 component: Fans
+            },
+            {
+                path: "/setting",
+                component: Setting
             }
         ]
     },
