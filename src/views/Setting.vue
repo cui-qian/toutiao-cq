@@ -77,17 +77,25 @@ export default {
     },
     // 修改用户信息
     async updateUser() {
-      // 准备后台需要的数据
-      const { name, intro, email } = this.userInfo;
-      await this.$http.patch("user/profile", { name, intro, email });
-      // 成功提示
-      this.$message.success("修改用户信息成功");
-      // 同步home组件的用户名
-      eventBus.$emit("updateUserName", name);
-      // 同步本地存储的用户名  获取用户信息  ,  修改用户信息 , 重新存入用户信息
-      const user = auth.getUser();
-      user.name = name;
-      auth.setUser(user);
+      try {
+        // 准备后台需要的数据
+        const { name, intro, email } = this.userInfo;
+        await this.$http.patch("user/profile", { name, intro, email });
+        // 成功提示
+        this.$message.success("修改用户信息成功");
+        // 同步home组件的用户名
+        eventBus.$emit("updateUserName", name);
+        // 同步本地存储的用户名  获取用户信息  ,  修改用户信息 , 重新存入用户信息
+        const user = auth.getUser();
+        user.name = name;
+        auth.setUser(user);
+      } catch (e) {
+        if (e.response && e.response.status == 409) {
+          this.$message.error("该用户名已存在");
+        } else {
+          this.$message.error("修改用户信息失败");
+        }
+      }
     }
   }
 };
