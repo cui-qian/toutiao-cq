@@ -23,6 +23,7 @@ Vue.use(plugin)
 // 挂载axios
 Vue.prototype.$http = axios
 
+
 Vue.use(ElementUI);
 
 new Vue({

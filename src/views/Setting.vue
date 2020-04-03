@@ -21,7 +21,7 @@
               <el-input v-model="userInfo.email"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary">保存设置</el-button>
+              <el-button type="primary" @click="saveSetting()">保存设置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -39,12 +39,17 @@
         </el-col>
       </el-row>
     </el-card>
+    <com-a></com-a>
+    <com-b></com-b>
   </div>
 </template>
-
 <script>
+// import EventBus from "../utils/eventBus";
+import ComA from "@/components/com-a.vue";
+import ComB from "@/components/com-b.vue";
 export default {
   name: "my-setting",
+  components: { ComA, ComB },
   data() {
     return {
       // 用户信息数据
@@ -56,6 +61,12 @@ export default {
       // 支持上传组件的数据
       imageUrl: null
     };
+  },
+  methods: {
+    // 保存设置
+    async saveSetting() {
+      //   EventBus.$emit("editAvatar", this.imageUrl);
+    }
   }
 };
 </script>
