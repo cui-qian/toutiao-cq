@@ -4,17 +4,17 @@
 import VueRouter from 'vue-router'
 // 导入vue
 import Vue from 'vue'
-// 导入组件
-import Login from '../views/Login.vue'
-import Home from '../views/Home.vue'
-import Welcome from '../views/Welcome.vue'
-import NotFound from '../views/404.vue'
-import Article from '../views/Article.vue'
-import Image from '../views/Image.vue'
-import Publish from '../views/Publish.vue'
-import Comment from '../views/Comment.vue'
-import Fans from '../views/Fans.vue'
-import Setting from '../views/Setting.vue'
+// 导入组件(实现懒加载)
+const Login = () => import('../views/Login.vue')
+const Home = () => import('../views/Home.vue')
+const Welcome = () => import('../views/Welcome.vue')
+const NotFound = () => import('../views/404.vue')
+const Article = () => import('../views/Article.vue')
+const Image = () => import('../views/Image.vue')
+const Publish = () => import('../views/Publish.vue')
+const Comment = () => import('../views/Comment.vue')
+const Fans = () => import('../views/Fans.vue')
+const Setting = () => import('../views/Setting.vue')
 
 
 // --导入auth模块
